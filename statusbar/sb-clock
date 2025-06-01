@@ -1,0 +1,17 @@
+#!/bin/sh
+
+zone=$(cat /etc/timezone)
+
+case "$zone" in
+	Asia/Seoul) timezone="UTC+9" ;;
+	Europe/London) timezone="UTC+1" ;; # Adjust for daylight saving if needed
+	America/Toronto) timezone="UTC-4" ;; # Also may be UTC-5 in winter
+	*) timezone=$(date +%:z | sed 's/^\([+-][0-9][0-9]\).*/\1/' | sed 's/^+0*/+/' | sed 's/^-0*/-/') ;;
+esac
+
+case $BLOCK_BUTTON in
+	1)
+		notify-send "World Clocks" "$(TZ="Asia/Seoul" date '+Seoul %H%M') |$(TZ="Europe/London" date '+London %H%M') |$(TZ="America/Toronto" date '+Toronto %H%M')"
+esac
+
+date "+%Y %b %d (%a) UTC$timezone %H:%M"
